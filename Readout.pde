@@ -42,42 +42,13 @@ public class Readout {
   private void generateStrings() {
     for (int i = 0; i < s.length; i++) {
       String[] number = new String[36];
-      number[0] = str(round(random(1, 9)));
-      number[1] = str(round(random(1, 9)));
-      number[2] = str(round(random(1, 9)));
-      number[3] = str(round(random(1, 9)));
-      number[4] = str(round(random(1, 9)));
-      number[5] = str(round(random(1, 9)));
-      number[6] = "-";
-      number[7] = str(round(random(1, 9)));
-      number[8] = str(round(random(1, 9)));
-      number[9] = str(round(random(1, 9)));
-      number[10] = str(round(random(1, 9)));
-      number[11] = str(round(random(1, 9)));
-      number[12] = str(round(random(1, 9)));
-      number[13] = str(round(random(1, 9)));
-      number[14] = str(round(random(1, 9)));
-      number[15] = str(round(random(1, 9)));
-      number[16] = str(round(random(1, 9)));
-      number[17] = str(round(random(1, 9)));
-      number[18] = str(round(random(1, 9)));
-      number[19] = str(round(random(1, 9)));
-      number[20] = str(round(random(1, 9)));
-      number[21] = str(round(random(1, 9)));
-      number[22] = str(round(random(1, 9)));
-      number[23] = str(round(random(1, 9)));
-      number[24] = "-";
-      number[25] = str(round(random(1, 9)));
-      number[26] = str(round(random(1, 9)));
-      number[27] = str(round(random(1, 9)));
-      number[28] = str(round(random(1, 9)));
-      number[29] = str(round(random(1, 9)));
-      number[30] = str(round(random(1, 9)));
-      number[31] = str(round(random(1, 9)));
-      number[32] = str(round(random(1, 9)));
-      number[33] = str(round(random(1, 9)));
-      number[34] = str(round(random(1, 9)));
-      number[35] = str(round(random(1, 9)));
+      for(int j = 0; j < 36; j++){
+        if(j != 6 && j != 24){
+          number[j] = str(round(random(1, 9)));
+        } else {
+          number[j] = "-";
+        }
+      }
       String output = String.join("", number);
       s[i] = output;
     }
