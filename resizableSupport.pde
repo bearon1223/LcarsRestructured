@@ -37,7 +37,8 @@ boolean within(PVector vector, float x, float y, float w, float h) {
 }
 
 boolean within(Readout r, PVector vector, float x, float y, float w, float h) {
-  if (vector.x+r.x > x && vector.y+r.y > y && vector.x+r.x < x + w && vector.y+r.y < y+h) return true;
+
+  if (ezMap(vector.x+r.originalCoords.x, true) > x && ezMap(vector.y+r.originalCoords.y, false) > y && ezMap(vector.x+r.originalCoords.x, true) < x + w && ezMap(vector.y+r.originalCoords.y, false) < y+h) return true;
   return false;
 }
 
@@ -46,7 +47,12 @@ float hypotenuse(float x, float y) {
 }
 
 boolean within(Readout r, PVector vector, float x, float y, float d) {
-  if (abs(hypotenuse(r.x+vector.x-x, r.y+vector.y-y)) <= d/2) return true;
+  if (abs(hypotenuse(ezMap(vector.x+r.originalCoords.x, true)-ezMap(x, true), ezMap(vector.y+r.originalCoords.y, false)-ezMap(y, false))) <= d/2) return true;
+  return false;
+}
+
+boolean within(PVector vector, float x, float y, float d) {
+  if (abs(hypotenuse(ezMap(vector.x, true)-ezMap(x, true), ezMap(vector.y, false)-ezMap(y, false))) <= d/2) return true;
   return false;
 }
 
@@ -61,22 +67,22 @@ class Timer {
   Timer(int time) {
     startingTime = time;
   }
-  
-  void resetTime(int time){
+
+  void resetTime(int time) {
     this.time = 0;
     startingTime = time;
   }
-  
-  void resetTimer(){
+
+  void resetTimer() {
     time = 0;
   }
-  
+
   float getTime(boolean countDown) {
     if (countDown) return round(startingTime - time/frameRate);
     return floor(time/frameRate);
   }
-  
-  boolean countTimer(){
+
+  boolean countTimer() {
     time++;
     return floor(time/frameRate) >= startingTime+1;
   }

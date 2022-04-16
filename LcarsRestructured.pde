@@ -26,7 +26,7 @@ PImage circleButton;
 PImage navTemplate;
 
 // Sector, System, Planet
-PVector coordinates = new PVector(0, 3, 3);
+PVector coordinates = new PVector(0, 0, 1);
 
 PFont f;
 
