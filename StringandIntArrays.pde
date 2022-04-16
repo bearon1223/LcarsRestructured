@@ -11,7 +11,7 @@ String[][] navBottomPanelNames = {
 };
 
 String[][] navTopPanelNames = {
-  {"SECTOR MAP", "SYSTEM MAP", "FEDERATION MAP", "POLICTICAL MAP", "GAMMA", "DELTA"}
+  {"SECTOR MAP", "SYSTEMS MAP", "PLANETARY SYSTEM MAP", "FEDERATION MAP", "POLITICAL MAP", "SELECT"}
 };
 
 String[][] navCenterPanelNames = {
@@ -76,6 +76,20 @@ String generateRandomName(float seed) {
   number[6] = str(round(random(1, 9)));
   number[7] = str(round(random(1, 9)));
   number[8] = str(round(random(1, 9)));
+  pop();
+  String output = String.join("", number);
+  return output;
+}
+
+String generateRandomNameS(float seed) {
+  push();
+  randomSeed((long)seed);
+  String[] number = new String[5];
+  number[0] = str(round(random(1, 9)));
+  number[1] = "-";
+  number[2] = str(round(random(1, 9)));
+  number[3] = str(round(random(1, 9)));
+  number[4] = str(round(random(1, 9)));
   pop();
   String output = String.join("", number);
   return output;

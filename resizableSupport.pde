@@ -31,20 +31,53 @@ float ezMap(float x, boolean isWidth) {
   else return map(x, 0, 600, 0, height);
 }
 
-boolean button(float x, float y, float w, float h) {
-  if (mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + h && mousePressed && mousePressed != pMousePressed) {
-    return true;
-  }
+boolean within(PVector vector, float x, float y, float w, float h) {
+  if (vector.x > x && vector.y > y && vector.x < x + w && vector.y < y+h) return true;
   return false;
 }
 
-boolean within(PVector vector, float x, float y, float w, float h){
-  if(vector.x > x && vector.y > y && vector.x < x + w && vector.y < y+h) return true;
+boolean within(Readout r, PVector vector, float x, float y, float w, float h) {
+  if (vector.x+r.x > x && vector.y+r.y > y && vector.x+r.x < x + w && vector.y+r.y < y+h) return true;
+  return false;
+}
+
+float hypotenuse(float x, float y) {
+  return sqrt(x*x + y*y);
+}
+
+boolean within(Readout r, PVector vector, float x, float y, float d) {
+  if (abs(hypotenuse(r.x+vector.x-x, r.y+vector.y-y)) <= d/2) return true;
   return false;
 }
 
 void button(float x, float y, float w, float h, Runnable run) {
   if (mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + h && mousePressed && mousePressed != pMousePressed) {
     run.run();
+  }
+}
+
+class Timer {
+  int time = 0, startingTime;
+  Timer(int time) {
+    startingTime = time;
+  }
+  
+  void resetTime(int time){
+    this.time = 0;
+    startingTime = time;
+  }
+  
+  void resetTimer(){
+    time = 0;
+  }
+  
+  float getTime(boolean countDown) {
+    if (countDown) return round(startingTime - time/frameRate);
+    return floor(time/frameRate);
+  }
+  
+  boolean countTimer(){
+    time++;
+    return floor(time/frameRate) >= startingTime+1;
   }
 }

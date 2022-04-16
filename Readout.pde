@@ -21,12 +21,12 @@ public class Readout {
   void circleButton(float x, float y, float w, float h, Runnable run1, Runnable run2, Runnable run3, Runnable run4, Runnable run5, Runnable run6, Runnable run7, Runnable run8) {
     displayImage(circleButton, x, y, w, h);
     /*
-     *Runnable Legend
-     *11 5 22
-     *11 5 22
-     *77 - 88
-     *33 6 44
-     *33 6 44
+     *  Runnable Legend
+     *  11 5 22
+     *  11 5 22
+     *  77 - 88
+     *  33 6 44
+     *  33 6 44
      */
     fill(255);
     if (button(x, y, w*0.40, h*0.40) && run1 != null)               run1.run();
@@ -130,9 +130,8 @@ public class Readout {
     y = this.y+map(y, 0, 600, 0, height);
     w = ezMap(w, true);
     h = ezMap(h, true);
-    //fill(255);
-    //rect(x, y, w, h);
-      if (mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + h) {
+
+    if (mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + h) {
       isOver = true;
       if (mousePressed && mousePressed != pMousePressed) {
         click.play();
@@ -148,10 +147,6 @@ public class Readout {
 
     w = map (originalSize.x, 0, 1000, 0, width);
     h = map (originalSize.y, 0, 600, 0, height);
-  }
-
-  float hypotenuse(float x, float y) {
-    return sqrt(x*x + y*y);
   }
 
   void render() {
