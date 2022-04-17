@@ -4,7 +4,7 @@ class MainReadout extends Readout {
   Panel navCenterPanel;
   Panel navTopPanel;
   Panel navBottomPanel;
-  
+
   TacticalDisplay tD;
 
   MainReadout(float x, float y, float w, float h) {
@@ -25,7 +25,7 @@ class MainReadout extends Readout {
     strokeWeight(1);
     stroke(255);
   }
-  
+
   //void systemSelect(PVector index, float x, float y){
   //  s[(int)index.x][(int)index.y].renderSector();
   //}
@@ -56,6 +56,7 @@ class MainReadout extends Readout {
       break;
     case 11:
       //Navigational Panel
+      tD.render(navTopPanel);
       navSystemsPanel.render();
       navCenterPanel.render();
       navTopPanel.render();
@@ -64,7 +65,6 @@ class MainReadout extends Readout {
       int increment = 5;
       circleButton(10, 10, 100, 100, null, null, null, null, () -> changePointPos(new PVector(0, -increment)), () -> changePointPos(new PVector(0, increment)), () -> changePointPos(new PVector(-increment, 0)), () -> changePointPos(new PVector(increment, 0)));
       circleButton(890 - originalCoords.x, 400 - originalCoords.y, 100, 100, null, null, null, null, null, null, null, null);
-      tD.render(navTopPanel);
 
       if (navTopPanel.getSinglePanel(0, 0).clicked()) {
         tD.scene = 0;
@@ -72,8 +72,12 @@ class MainReadout extends Readout {
         tD.scene = 1;
       } else if (navTopPanel.getSinglePanel(2, 0).clicked()) {
         tD.scene = 2;
-      } 
+      }
       break;
+    case 2:
+      // AUX Directory/Ship Status
+      
+      
     default:
       textAlign(CENTER, CENTER);
       fill(#D8A600);

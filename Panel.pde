@@ -174,7 +174,6 @@ class RandomColorRect {
   }
 
   void displayText() {
-    //text(name, (float)x + i * rectSize.x+rectSize.x/12, (float)y + j * rectSize.y-rectSize.y/8, rectSize.x- rectSize.x/8 - rectSize.x/12, rectSize.y-5);
     if (isReversed) textAlign(LEFT, BOTTOM);
     if (!isReversed) textAlign(RIGHT, BOTTOM);
     fill(0);
