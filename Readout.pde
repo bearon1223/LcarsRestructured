@@ -84,6 +84,10 @@ public class Readout {
     mapRect(originalCoords.x+x, originalCoords.y+y, w, h);
   }
 
+  void drawRect(float x, float y, float w, float h, float r) {
+    mapRect(originalCoords.x+x, originalCoords.y+y, w, h, r);
+  }
+
   void drawEllipse(float x, float y, float r1, float r2) {
     mapEllipse(originalCoords.x + x, originalCoords.y + y, r1, r2);
   }

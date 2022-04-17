@@ -14,7 +14,7 @@ class Sector {
   }
 
   Sector(PVector tacticalDisplayLoc, int id, PVector[] systemCoords) {
-    this(tacticalDisplayLoc, id, round(random(2, 4)), systemCoords);
+    this(tacticalDisplayLoc, id, round(random(3, 7)), systemCoords);
   }
 
   StarSystem getSystem(int i) {

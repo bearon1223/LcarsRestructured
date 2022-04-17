@@ -4,6 +4,8 @@ class MainReadout extends Readout {
   Panel navCenterPanel;
   Panel navTopPanel;
   Panel navBottomPanel;
+  
+  Warpcore wc;
 
   TacticalDisplay tD;
 
@@ -15,6 +17,7 @@ class MainReadout extends Readout {
     navTopPanel = new Panel(this, 120, 0, w-125, 120).panelCount(6, 1).addNames(navTopPanelNames);
     navBottomPanel = new Panel(this, 0, 330, w, h-325).panelCount(7, 1).addNames(navBottomPanelNames);
     tD = new TacticalDisplay(x+10, y+150);
+    wc = new Warpcore(x+10, y+10);
   }
 
   void target(float x, float y, float size) {
@@ -25,10 +28,6 @@ class MainReadout extends Readout {
     strokeWeight(1);
     stroke(255);
   }
-
-  //void systemSelect(PVector index, float x, float y){
-  //  s[(int)index.x][(int)index.y].renderSector();
-  //}
 
   void changePointPos(PVector direction) {
     tD.changePointPos(direction);
@@ -76,8 +75,8 @@ class MainReadout extends Readout {
       break;
     case 2:
       // AUX Directory/Ship Status
-      
-      
+      wc.render();
+      break;
     default:
       textAlign(CENTER, CENTER);
       fill(#D8A600);

@@ -15,7 +15,7 @@ class TacticalDisplay extends Readout {
     for (int j = 0; j < 4; j++) {
       for (int i = 0; i < 5; i++) {
         targetingPointLoc = new PVector(imageSize.x/2, imageSize.y/2);
-        s[i][j] = new Sector(new PVector(x, y), index, randomSysCoords(4));
+        s[i][j] = new Sector(new PVector(x, y), index, randomSysCoords(7));
         index++;
       }
     }
