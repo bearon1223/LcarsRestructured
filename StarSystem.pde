@@ -29,6 +29,10 @@ class StarSystem {
   void renderSystem() {
     chooseColor();
     mapEllipse(loc.x, loc.y, r, r);
+    textAlign(CENTER, CENTER);
+    textSize(map(10, 0, 1600, 0, width+height));
+    fill(255);
+    displayText(str(id+1), loc.x-r/2, loc.y+r/2, r, r);
   }
 
   void renderPlanets(float yCoord) {
@@ -46,6 +50,16 @@ class StarSystem {
     for (int i = 0; i < planetAmount; i++) {
       p[i].render(yCoord);
     }
+  }
+  
+  void displayText(String text, float x, float y, float w, float h) {
+    text(text, ezMap(x, true), ezMap(y, false), ezMap(w, true), ezMap(h, false));
+  }
+  
+  float distanceSystem(PVector startingLoc){
+    //println("sLoc "+str(startingLoc.x)+" loc "+loc.x);
+    //println("sLoc-loc "+str(startingLoc.x-loc.x));
+    return abs(hypotenuse(startingLoc.x-loc.x, startingLoc.y-loc.y));
   }
 }
 

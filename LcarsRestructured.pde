@@ -41,6 +41,9 @@ SoundFile click;
 
 boolean pMousePressed = false;
 boolean isOver = false;
+boolean isTraveling = false;
+
+float selectedSpeed = 0;
 
 int sceneMain = 0;
 
@@ -92,9 +95,22 @@ void draw() {
   noStroke();
   background(0);
   textAlign(RIGHT, BOTTOM);
+  
   wc.update();
   impulse.update();
   batteries.update();
+  
+  if (isTraveling) {
+    println(coordinates +", selected"+mReadout.tD.selected);
+  }
+
+  //travel(TacticalDisplay tD, Sector current, Sector destination, StarSystem currentS, StarSystem destinationS, boolean startTravel, float speed) One beefy function jesus christ
+  wc.travel(mReadout.tD,
+    mReadout.tD.s[(int)mReadout.tD.currentSector.x][(int)mReadout.tD.currentSector.y],
+    mReadout.tD.s[(int)mReadout.tD.selectedSector.x][(int)mReadout.tD.selectedSector.y],
+    mReadout.tD.s[(int)mReadout.tD.currentSector.x][(int)mReadout.tD.currentSector.y].getSystem((int)coordinates.y),
+    mReadout.tD.s[(int)mReadout.tD.selectedSector.x][(int)mReadout.tD.selectedSector.y].getSystem((int)mReadout.tD.selected.y),
+    isTraveling, selectedSpeed);
 
   switch(sceneMain) {
   case 0:

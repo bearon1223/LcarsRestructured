@@ -74,10 +74,12 @@ class MainReadout extends Readout {
       circleButton(10, 10, 100, 100, null, null, null, null, () -> changePointPos(new PVector(0, -increment)), () -> changePointPos(new PVector(0, increment)), () -> changePointPos(new PVector(-increment, 0)), () -> changePointPos(new PVector(increment, 0)));
       circleButton(890 - originalCoords.x, 400 - originalCoords.y, 100, 100, null, null, null, null, null, null, null, null);
 
-      if (second() % 2 == 0) fill(255, 100, 100);
+      if (second() % 2 == 0 && (!wc.isEnabled || wc.powerRerouted)) fill(255, 100, 100);
       else fill(255);
       textAlign(LEFT, CENTER);
       if (!wc.isEnabled || wc.powerRerouted) displayText("Error: No Active Core", 10, 130, tD.originalSize.x, 20);
+      else if (wc.travelDistance-wc.traveledDistance != 0) displayText("Distance Left: "+str(round(wc.travelDistance-wc.traveledDistance)), 10, 130, tD.originalSize.x, 20);
+      else displayText("At Destination", 10, 130, tD.originalSize.x, 20);
       textAlign(RIGHT, BOTTOM);
       if (navTopPanel.getSinglePanel(0, 0).clicked()) {
         tD.scene = 0;
@@ -85,6 +87,13 @@ class MainReadout extends Readout {
         tD.scene = 1;
       } else if (navTopPanel.getSinglePanel(2, 0).clicked()) {
         tD.scene = 2;
+      } else if (navTopPanel.getSinglePanel(3, 0).clicked()) {
+        tD.selected = coordinates;
+        tD.scene = 2;
+      }
+      if (navBottomPanel.getSinglePanel(0, 0).clicked()) {
+        isTraveling = true;
+        selectedSpeed = 1;
       }
       break;
     case 2:

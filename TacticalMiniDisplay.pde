@@ -3,7 +3,8 @@ class TacticalDisplay extends Readout {
   final PVector imageSize = new PVector(228, 173);
 
   PVector targetingPointLoc;
-  PVector selected = coordinates;
+  PVector selected;
+  PVector currentSector = new PVector(0, 0);
   PVector selectedSector = new PVector(0, 0);
 
   Boolean isClicked = false;
@@ -11,11 +12,12 @@ class TacticalDisplay extends Readout {
   TacticalDisplay(float x, float y) {
     super(x, y, 228, 173);
     s = new Sector[5][4];
+    selected = new PVector(0, 0, 1);
     int index = 0;
     for (int j = 0; j < 4; j++) {
       for (int i = 0; i < 5; i++) {
         targetingPointLoc = new PVector(imageSize.x/2, imageSize.y/2);
-        s[i][j] = new Sector(new PVector(x, y), index, randomSysCoords(7));
+        s[i][j] = new Sector(new PVector(x, y), new PVector(i, j), index, randomSysCoords(7));
         index++;
       }
     }
@@ -101,6 +103,8 @@ class TacticalDisplay extends Readout {
     if (isClicked) {
       selected.x = with;
       selectedSector = temp;
+      selected.y = 0;
+      selected.z = 0;
     }
   }
 

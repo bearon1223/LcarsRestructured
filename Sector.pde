@@ -1,10 +1,11 @@
 class Sector {
   StarSystem[] s;
   int id, systemAmount;
-  PVector tacticalDisplayLoc;
+  PVector tacticalDisplayLoc, arrayID;
 
-  Sector(PVector tacticalDisplayLoc, int id, int systemAmount, PVector[] systemCoords) {
+  Sector(PVector tacticalDisplayLoc, PVector arrayID, int id, int systemAmount, PVector[] systemCoords) {
     this.id = id;
+    this.arrayID = arrayID;
     this.systemAmount = systemAmount;
     this.tacticalDisplayLoc = tacticalDisplayLoc;
     s = new StarSystem[systemAmount];
@@ -13,17 +14,21 @@ class Sector {
     }
   }
 
-  Sector(PVector tacticalDisplayLoc, int id, PVector[] systemCoords) {
-    this(tacticalDisplayLoc, id, round(random(3, 7)), systemCoords);
+  Sector(PVector tacticalDisplayLoc, PVector arrayID, int id, PVector[] systemCoords) {
+    this(tacticalDisplayLoc, arrayID, id, round(random(3, 7)), systemCoords);
   }
 
   StarSystem getSystem(int i) {
     return s[i];
   }
-  
+
   void renderSector() {
-    for(int i = 0; i < systemAmount; i++) {
+    for (int i = 0; i < systemAmount; i++) {
       s[i].renderSystem();
     }
+  }
+
+  float distanceSector(PVector fromID) {
+    return abs(hypotenuse(fromID.x-arrayID.x, fromID.y-arrayID.y));
   }
 }

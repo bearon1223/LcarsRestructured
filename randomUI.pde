@@ -44,6 +44,8 @@ class Batteries extends Readout {
 
 class Warpcore extends UIElement {
   int segmantLight = 0;
+  float travelDistance = 0;
+  float traveledDistance = 0;
   Batteries bat;
 
   Warpcore(Batteries bat, float x, float y, float w, float h) {
@@ -53,6 +55,28 @@ class Warpcore extends UIElement {
 
   Warpcore(Batteries bat, float x, float y) {
     this(bat, x, y, 150, 340);
+  }
+
+  void travel(TacticalDisplay tD, Sector current, Sector destination, StarSystem currentS, StarSystem destinationS, boolean startTravel, float speed) {
+
+    if (floor(current.distanceSector(destination.arrayID)) == 0) travelDistance = map(currentS.distanceSystem(destinationS.loc), 0, hypotenuse(228, 173), 0, 10)*10;
+    else {
+      //println("inRightSpot");
+      travelDistance = map(current.distanceSector(destination.arrayID), 0, hypotenuse(5, 4), 10, 50)*10+map(currentS.distanceSystem(destinationS.loc), 0, hypotenuse(228, 173), 0, 10)*10;
+    }
+
+    //println(map(currentS.distanceSystem(destinationS.loc), 0, hypotenuse(228, 173), 0, 10)*10);
+
+    if (traveledDistance < travelDistance && startTravel && isEnabled && !powerRerouted) {
+      bat.power -= 1;
+      traveledDistance += speed/4;
+    }
+    if (traveledDistance >= travelDistance && isTraveling) {
+      traveledDistance = 0;
+      coordinates = new PVector(destination.id, destinationS.id, 0);
+      tD.currentSector = destination.arrayID;
+      isTraveling = false;
+    }
   }
 
   @Override
@@ -83,6 +107,8 @@ class Warpcore extends UIElement {
       drawEllipse(originalSize.x/2, originalSize.y/2, 25, 25);
       fill(100);
       drawRect(originalSize.x/2-2.5, originalSize.y/2-15, 5, 30);
+      stroke(0);
+      strokeWeight(1);
       for (int i = 0; i < 6; i++) {
         if (segmantLight == i || 12-segmantLight == i) fill(#95D2FF);
         else fill(#0075CB);
