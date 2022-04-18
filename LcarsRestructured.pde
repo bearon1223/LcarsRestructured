@@ -15,6 +15,11 @@ MainReadout mReadout;
 SecondaryReadout sReadout;
 TacScreen tacScreen;
 
+Warpcore wc;
+Impulse impulse;
+Batteries batteries;
+
+PImage icon;
 
 PImage federationLogo;
 PImage standbyScreen;
@@ -58,16 +63,13 @@ void setup() {
   sReadout = new SecondaryReadout(390, 5, 1000-395 - 180, 195);
   aReadout = new AUXReadout(5, 5, mainSideMenu.x-10, statusButtonR.y-10);
   mReadout = new MainReadout(midMenu.x, midMenu.y+midMenu.size.y, width - midMenu.x - 5, height - (midMenu.y + midMenu.size.y) - 5);
-  
+
   tacScreen = new TacScreen();
 
   reset = new Timer(2);
 
   click = new SoundFile(this, "Click.wav");
   click.amp(0.125);
-
-  surface.setTitle("LCARS");
-  surface.setResizable(true);
 
   federationLogo    = loadImage("Federation Logo.jpg");
   standbyScreen     = loadImage("Federation Standby.jpg");
@@ -77,6 +79,11 @@ void setup() {
   template2         = loadImage("Tactical Display Template.png");
   circleButton      = loadImage("Circle Button.png");
   navTemplate       = loadImage("Nav Panel.jpg");
+  icon              = loadImage("icon.png");
+
+  surface.setTitle("LCARS");
+  surface.setResizable(true);
+  surface.setIcon(icon);
 }
 
 void draw() {
@@ -85,6 +92,9 @@ void draw() {
   noStroke();
   background(0);
   textAlign(RIGHT, BOTTOM);
+  wc.update();
+  impulse.update();
+  batteries.update();
 
   switch(sceneMain) {
   case 0:
@@ -129,7 +139,7 @@ void draw() {
     mainSideMenu.clickArray(mReadout, mainSideMenuClickID);
     button(mainSideMenu.x, mainSideMenu.y, mainSideMenu.size.x, mainSideMenu.size.y, () -> resetNotMain());
     smallSettingsPanelButtons();
-    
+
     tacScreen.render();
     break;
   default:

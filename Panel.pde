@@ -219,6 +219,7 @@ class RandomColorRect {
   }
 
   void render(int round) {
+    noStroke();
     fill(randColor[0], randColor[1], randColor[2]);
     if (round == 0) rect(x, y, w, h, 1);
     if (round == 1) {
@@ -230,6 +231,7 @@ class RandomColorRect {
 
   void render(int round, boolean isReversed) {
     this.isReversed = isReversed;
+    noStroke();
     fill(randColor[0], randColor[1], randColor[2]);
     if (round == 0) rect(x, y, w, h, 2);
     if (round == 1 && !isReversed) {

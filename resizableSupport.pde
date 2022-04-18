@@ -3,7 +3,7 @@ void mapRect(float x, float y, float w, float h) {
 }
 
 void mapRect(float x, float y, float w, float h, float r) {
-  rect(ezMap(x, true), ezMap(y, false), ezMap(w, true), ezMap(h, false), r);
+  rect(ezMap(x, true), ezMap(y, false), ezMap(w, true), ezMap(h, false), map(r, 0, 1000+600, 0, width+height));
 }
 
 void mapImage(PImage image, float x, float y, float w, float h) {

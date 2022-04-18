@@ -1,23 +1,32 @@
 class MainReadout extends Readout {
   Panel mainSystemsPanel;
+
   Panel navSystemsPanel;
   Panel navCenterPanel;
   Panel navTopPanel;
   Panel navBottomPanel;
-  
-  Warpcore wc;
+
+  Panel auxMainPanel;
+  Panel auxSidePanel;
 
   TacticalDisplay tD;
 
   MainReadout(float x, float y, float w, float h) {
     super(x, y, w, h);
     mainSystemsPanel = new Panel(this, 0, 0, w, h).panelCount(6, 5);
+
+    tD = new TacticalDisplay(x+10, y+150);
     navSystemsPanel = new Panel(this, 340, 150, 150, 150).panelCount(3, 6).setTextSize(5).setRounded();
     navCenterPanel = new Panel(this, 243, 120, 95, 211).panelCount(1, 4).addNames(navCenterPanelNames);
     navTopPanel = new Panel(this, 120, 0, w-125, 120).panelCount(6, 1).addNames(navTopPanelNames);
     navBottomPanel = new Panel(this, 0, 330, w, h-325).panelCount(7, 1).addNames(navBottomPanelNames);
-    tD = new TacticalDisplay(x+10, y+150);
-    wc = new Warpcore(x+10, y+10);
+
+    auxMainPanel = new Panel(this, 160, 10, 450, 100).panelCount(5, 1).addNames(auxMainPanelNames);
+    auxSidePanel = new Panel(this, w-125, 110, 130, h-110).panelCount(1, 5).addNames(auxSidePanelNames);
+
+    batteries = new Batteries(x+175+155, auxSidePanel.y, auxSidePanel.originalSize.y);
+    wc = new Warpcore(batteries, x+10, y+10);
+    impulse = new Impulse(batteries, x+25+wc.w, w-75);
   }
 
   void target(float x, float y, float size) {
@@ -65,6 +74,11 @@ class MainReadout extends Readout {
       circleButton(10, 10, 100, 100, null, null, null, null, () -> changePointPos(new PVector(0, -increment)), () -> changePointPos(new PVector(0, increment)), () -> changePointPos(new PVector(-increment, 0)), () -> changePointPos(new PVector(increment, 0)));
       circleButton(890 - originalCoords.x, 400 - originalCoords.y, 100, 100, null, null, null, null, null, null, null, null);
 
+      if (second() % 2 == 0) fill(255, 100, 100);
+      else fill(255);
+      textAlign(LEFT, CENTER);
+      if (!wc.isEnabled || wc.powerRerouted) displayText("Error: No Active Core", 10, 130, tD.originalSize.x, 20);
+      textAlign(RIGHT, BOTTOM);
       if (navTopPanel.getSinglePanel(0, 0).clicked()) {
         tD.scene = 0;
       } else if (navTopPanel.getSinglePanel(1, 0).clicked()) {
@@ -76,6 +90,23 @@ class MainReadout extends Readout {
     case 2:
       // AUX Directory/Ship Status
       wc.render();
+      impulse.render();
+      batteries.render();
+
+      auxMainPanel.render();
+      auxSidePanel.render();
+
+      auxMainPanel.getSinglePanel(0, 0).clicked(() -> wc.scene = 1);
+      auxMainPanel.getSinglePanel(1, 0).clicked(() -> wc.powerRerouted = !wc.powerRerouted);
+      auxMainPanel.getSinglePanel(2, 0).clicked(() -> wc.isEnabled = true);
+      auxMainPanel.getSinglePanel(3, 0).clicked(() -> wc.isEnabled = false);
+      //auxMainPanel.getSinglePanel(4, 0).clicked(null);
+
+      //auxSidePanel.getSinglePanel(0, 0).clicked(null);
+      auxSidePanel.getSinglePanel(0, 1).clicked(() -> impulse.isEnabled = false);
+      auxSidePanel.getSinglePanel(0, 2).clicked(() -> impulse.isEnabled = true);
+      if (auxSidePanel.getSinglePanel(0, 3).clicked() && !impulse.powerRerouted && impulse.isEnabled) impulse.powerSave = !impulse.powerSave;
+      if (auxSidePanel.getSinglePanel(0, 4).clicked() && !impulse.powerSave && impulse.isEnabled) impulse.powerRerouted = !impulse.powerRerouted;
       break;
     default:
       textAlign(CENTER, CENTER);

@@ -5,7 +5,6 @@ String[][] smallSettingsPanelNames = {
   {"DEACTIVATE", "ONLINE"},
 };
 
-
 String[][] navBottomPanelNames = {
   {"WARP 1", "WARP 2", "WARP 3", "WARP 4", "WARP 5", "WARP 6", "WARP 7"}
 };
@@ -20,8 +19,6 @@ String[][] navCenterPanelNames = {
   {"66% IMPULSE"},
   {"FULL IMPULSE"}
 };
-
-
 
 String[][] mainSideMenuNames = {
   {"SYS DIRECTORY"},
@@ -43,8 +40,6 @@ int [][]mainSideMenuClickID = {
   {7},
 };
 
-
-
 String[][] navPanelNames = {
   {"Warp 7"},
   {"Warp 6"},
@@ -61,6 +56,20 @@ String[][] upperButtonsNames = {
   {generateRandomName(), generateRandomName()},
   {generateRandomName(), generateRandomName()},
   {generateRandomName(), generateRandomName()},
+};
+
+String[][] auxMainPanelNames = {
+  //eject, rerout reactor power, startup, shutDown, replaceDilithium
+  {"EJECT CORE", "REROUT POWER", "STARTUP", "EMERGENCY SHUTDOWN", "REPLACE REACTION MASS"}
+};
+
+String[][] auxSidePanelNames = {
+  //Replace Reaction Mass, Shutdown, Startup, Powersave, reroute reactor power
+  {"REPLACE DEUTERIUM"},
+  {"SHUTDOWN"},
+  {"ENABLE"},
+  {"POWER SAVE"},
+  {"REROUT POWER"}
 };
 
 String generateRandomName(float seed) {
