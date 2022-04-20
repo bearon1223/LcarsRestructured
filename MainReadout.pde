@@ -94,7 +94,25 @@ class MainReadout extends Readout {
       if (navBottomPanel.getSinglePanel(0, 0).clicked()) {
         isTraveling = true;
         selectedSpeed = 1;
-      }
+      } else if (navBottomPanel.getSinglePanel(1, 0).clicked()) {
+        isTraveling = true;
+        selectedSpeed = 2;
+      } else if (navBottomPanel.getSinglePanel(2, 0).clicked()) {
+        isTraveling = true;
+        selectedSpeed = 3;
+      } else if (navBottomPanel.getSinglePanel(3, 0).clicked()) {
+        isTraveling = true;
+        selectedSpeed = 4;
+      } else if (navBottomPanel.getSinglePanel(4, 0).clicked()) {
+        isTraveling = true;
+        selectedSpeed = 5;
+      } else if (navBottomPanel.getSinglePanel(5, 0).clicked()) {
+        isTraveling = true;
+        selectedSpeed = 6;
+      } else if (navBottomPanel.getSinglePanel(6, 0).clicked()) {
+        isTraveling = true;
+        selectedSpeed = 7;
+      } else 
       break;
     case 2:
       // AUX Directory/Ship Status

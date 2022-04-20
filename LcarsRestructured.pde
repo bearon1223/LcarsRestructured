@@ -18,6 +18,7 @@ TacScreen tacScreen;
 Warpcore wc;
 Impulse impulse;
 Batteries batteries;
+Shields shields;
 
 PImage icon;
 
@@ -99,10 +100,7 @@ void draw() {
   wc.update();
   impulse.update();
   batteries.update();
-  
-  if (isTraveling) {
-    println(coordinates +", selected"+mReadout.tD.selected);
-  }
+  shields.update();
 
   //travel(TacticalDisplay tD, Sector current, Sector destination, StarSystem currentS, StarSystem destinationS, boolean startTravel, float speed) One beefy function jesus christ
   wc.travel(mReadout.tD,

@@ -1,27 +1,110 @@
-class UIElement extends Readout {
+class Subsystem extends Readout {
   boolean isEnabled = true;
   boolean powerRerouted = false;
 
-  UIElement(float x, float y, float w, float h) {
+  Subsystem(float x, float y, float w, float h) {
     super(x, y, w, h);
   }
 
   @Override
-    void render() {
-    fill(255);
-    rect(x, y, w, h);
-  }
-}
-
-class Batteries extends Readout {
-  float power = 100;
-
-  Batteries(float x, float y, float h) {
-    super(x, y, 145, h);
+    void update() {
+    super.update();
   }
 
   @Override
     void render() {
+    update();
+  }
+}
+
+class Weapons extends Subsystem {
+  float powerRemaining = 0;
+  float HP = 100;
+  Weapons() {
+    super(0, 0, 0, 0);
+  }
+  
+  void fire(float powerLevel, Ship target) {
+    if(target.shields.isEnabled) target.shields.hitShields(powerLevel);
+    else target.hull.hitHull(powerLevel);
+  }
+}
+
+class Phasers extends Weapons {
+  Phasers() {
+    super();
+    powerRemaining = 100;
+  }
+
+  @Override
+    void update() {
+  }
+}
+
+class Hull {
+  float HP = 100;
+  Hull(){
+    
+  }
+  
+  void hitHull(float hitPower) {
+    HP -= hitPower/3;
+  }
+}
+
+class Shields extends Subsystem {
+  float powerLevel = 100;
+
+  Shields(float x, float y) {
+    super(x, y, 425, 200);
+  }
+
+  boolean isShieldsUp() {
+    return powerLevel > 0;
+  }
+
+  void hitShields(float hitPower) {
+    powerLevel -= hitPower/2;
+  }
+
+  @Override
+    void update() {
+    super.update();
+    if(powerLevel < 0) isEnabled = false;
+    if(powerLevel < 100 && isEnabled) powerLevel++;
+    else powerLevel = 100;
+  }
+
+  @Override
+    void render() {
+    if (isEnabled) {
+      stroke(255, map(powerLevel, 0, 100, 0, 255));
+      fill(50, map(powerLevel, 0, 100, 0, 255));
+      strokeWeight(10);
+      ellipse(x+w/2, y+h/2, w-30, h-10);
+    }
+    fill(100);
+    noStroke();
+    drawEllipse(300, 100, 130, 150);
+    drawRect(100, 80, 200, 40, 10);
+    drawRect(80, 40, 150, 20, 10);
+    drawRect(80, 140, 150, 20, 10);
+    drawRect(140, 40, 30, 120, 10);
+  }
+}
+
+class Batteries extends Subsystem {
+  float power = 100;
+
+  Batteries(float x, float y, float h) {
+    super(x, y, 145, h);
+    isEnabled = false;
+  }
+
+  @Override
+    void render() {
+    isEnabled = true;
+    powerRerouted = false;
     fill(#A7FFEA);
     noStroke();
     drawRect(10, originalSize.y-10, originalSize.x-20, -map(constrain(round(power/10), 0, 10), 0, 10, 0, originalSize.y-45), 10);
@@ -42,7 +125,7 @@ class Batteries extends Readout {
   }
 }
 
-class Warpcore extends UIElement {
+class Warpcore extends Subsystem {
   int segmantLight = 0;
   float travelDistance = 0;
   float traveledDistance = 0;
@@ -68,7 +151,7 @@ class Warpcore extends UIElement {
     //println(map(currentS.distanceSystem(destinationS.loc), 0, hypotenuse(228, 173), 0, 10)*10);
 
     if (traveledDistance < travelDistance && startTravel && isEnabled && !powerRerouted) {
-      bat.power -= 1;
+      bat.power -= 0.5;
       traveledDistance += speed/4;
     }
     if (traveledDistance >= travelDistance && isTraveling) {
@@ -133,7 +216,7 @@ class Warpcore extends UIElement {
   }
 }
 
-class Impulse extends UIElement {
+class Impulse extends Subsystem {
   PShape left, right;
   boolean powerSave;
   Batteries bat;
