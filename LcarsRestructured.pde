@@ -31,14 +31,18 @@ PImage template2;
 PImage circleButton;
 PImage navTemplate;
 
-// Sector, System, Planet
+// SectorX, SectorY, SystemID, PlanetID
 PVector coordinates = new PVector(0, 0, 1);
+// Planet, X, Y
+PVector shipCoordinates = new PVector(0, 0, 0);
 
 PFont f;
+Sector[][] s;
 
 Timer reset;
 
 SoundFile click;
+SoundFile failClick;
 
 boolean pMousePressed = false;
 boolean isOver = false;
@@ -74,6 +78,8 @@ void setup() {
 
   click = new SoundFile(this, "Click.wav");
   click.amp(0.125);
+  failClick = new SoundFile(this, "Deny.wav");
+  failClick.amp(0.125);
 
   federationLogo    = loadImage("Federation Logo.jpg");
   standbyScreen     = loadImage("Federation Standby.jpg");
@@ -96,18 +102,20 @@ void draw() {
   noStroke();
   background(0);
   textAlign(RIGHT, BOTTOM);
-  
+
   wc.update();
   impulse.update();
   batteries.update();
   shields.update();
 
+  s[(int)convertIndexToVector(coordinates.x).x][(int)convertIndexToVector(coordinates.x).y].getSystem((int)coordinates.y).getPlanet((int)coordinates.z).update();
+
   //travel(TacticalDisplay tD, Sector current, Sector destination, StarSystem currentS, StarSystem destinationS, boolean startTravel, float speed) One beefy function jesus christ
   wc.travel(mReadout.tD,
-    mReadout.tD.s[(int)mReadout.tD.currentSector.x][(int)mReadout.tD.currentSector.y],
-    mReadout.tD.s[(int)mReadout.tD.selectedSector.x][(int)mReadout.tD.selectedSector.y],
-    mReadout.tD.s[(int)mReadout.tD.currentSector.x][(int)mReadout.tD.currentSector.y].getSystem((int)coordinates.y),
-    mReadout.tD.s[(int)mReadout.tD.selectedSector.x][(int)mReadout.tD.selectedSector.y].getSystem((int)mReadout.tD.selected.y),
+    s[(int)mReadout.tD.currentSector.x][(int)mReadout.tD.currentSector.y],
+    s[(int)mReadout.tD.selectedSector.x][(int)mReadout.tD.selectedSector.y],
+    s[(int)mReadout.tD.currentSector.x][(int)mReadout.tD.currentSector.y].getSystem((int)coordinates.y),
+    s[(int)mReadout.tD.selectedSector.x][(int)mReadout.tD.selectedSector.y].getSystem((int)mReadout.tD.selected.y),
     isTraveling, selectedSpeed);
 
   switch(sceneMain) {

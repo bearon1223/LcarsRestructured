@@ -27,6 +27,13 @@ class Sector {
       s[i].renderSystem();
     }
   }
+  
+  void renderTiny(TacticalDisplay t, PVector offset){
+    //println(arrayID);
+    for (int i = 0; i < systemAmount; i++){
+      s[i].renderSystemTiny(t, offset, arrayID);
+    }
+  }
 
   float distanceSector(PVector fromID) {
     return abs(hypotenuse(fromID.x-arrayID.x, fromID.y-arrayID.y));

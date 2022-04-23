@@ -10,7 +10,7 @@ String[][] navBottomPanelNames = {
 };
 
 String[][] navTopPanelNames = {
-  {"SECTOR MAP", "SYSTEMS MAP", "PLANETARY SYSTEM MAP", "CURRENT SYSTEM", "POLITICAL MAP", "SELECT"}
+  {"SECTOR MAP", "SYSTEMS MAP", "SOLAR SYSTEM MAP", "PLANET MAP", "CURRENT PLANET", "SELECT"}
 };
 
 String[][] navCenterPanelNames = {

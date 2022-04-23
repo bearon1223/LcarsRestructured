@@ -62,6 +62,26 @@ void button(float x, float y, float w, float h, Runnable run) {
   }
 }
 
+PVector convertIndexToVector(float index) {
+  PVector finalConversion = new PVector(69, 69, 69);
+  if (index <= 4) finalConversion = new PVector(index, 0);
+  else if (index <= 9) finalConversion = new PVector(index-5, 1);
+  else if (index <= 14) finalConversion = new PVector(index-10, 2);
+  else if (index <= 19) finalConversion = new PVector(index-15, 3);
+  else println("ur dum");
+  return finalConversion;
+}
+
+class longVector {
+  float x, y, z, w;
+  longVector(float x, float y, float z, float w) {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+    this.w = w;
+  }
+}
+
 class Timer {
   int time = 0, startingTime;
   Timer(int time) {

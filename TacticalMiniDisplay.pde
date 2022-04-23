@@ -1,5 +1,4 @@
 class TacticalDisplay extends Readout {
-  Sector[][] s;
   final PVector imageSize = new PVector(228, 173);
 
   PVector targetingPointLoc;
@@ -7,10 +6,13 @@ class TacticalDisplay extends Readout {
   PVector currentSector = new PVector(0, 0);
   PVector selectedSector = new PVector(0, 0);
 
+  longVector limits;
+
   Boolean isClicked = false;
 
   TacticalDisplay(float x, float y) {
     super(x, y, 228, 173);
+    limits = new longVector(30, w-30, 30, h-40);
     s = new Sector[5][4];
     selected = new PVector(0, 0, 1);
     int index = 0;
@@ -36,28 +38,22 @@ class TacticalDisplay extends Readout {
     float yCoord = originalCoords.y+originalSize.y/2;
     s[(int)selectedSector.x][(int)selectedSector.y].getSystem(floor(selected.y)).renderPlanets(yCoord);
 
-    fill(255);
-    textAlign(LEFT, TOP);
-    textSize(13);
-    displayText("Selected: Sector"+floor(selected.x+1)+", System "+floor(selected.y+1) + ", \nPlanet " + floor(selected.z), 10, 15);
-    textAlign(RIGHT, BOTTOM);
-
-    if (isClicked && within(this, targetingPointLoc, 410, yCoord, 50)) {
+    if (isClicked && within(this, targetingPointLoc, 410, yCoord, s[(int)selectedSector.x][(int)selectedSector.y].getSystem(floor(selected.y)).r)) {
       selected.z = 0;
-    } else  if (isClicked && within(this, targetingPointLoc, 450, yCoord, 15)) {
+    } else  if (isClicked && within(this, targetingPointLoc, 450, yCoord, s[(int)selectedSector.x][(int)selectedSector.y].getSystem(floor(selected.y)).getPlanet((int)selected.z).size)) {
       selected.z = 1;
-    } else if (isClicked && within(this, targetingPointLoc, 490, yCoord, 27)) {
+    } else if (isClicked && within(this, targetingPointLoc, 490, yCoord, s[(int)selectedSector.x][(int)selectedSector.y].getSystem(floor(selected.y)).getPlanet((int)selected.z).size)) {
       selected.z = 2;
-    } else if (isClicked && within(this, targetingPointLoc, 540, yCoord, 30)) {
+    } else if (isClicked && within(this, targetingPointLoc, 540, yCoord, s[(int)selectedSector.x][(int)selectedSector.y].getSystem(floor(selected.y)).getPlanet((int)selected.z).size)) {
       selected.z = 3;
-    } else if (isClicked && within(this, targetingPointLoc, 590, yCoord, 20)) {
+    } else if (isClicked && within(this, targetingPointLoc, 590, yCoord, s[(int)selectedSector.x][(int)selectedSector.y].getSystem(floor(selected.y)).getPlanet((int)selected.z).size)) {
       selected.z = 4;
     }
   }
 
   void systemSelect(PVector index) {
     textAlign(LEFT, TOP);
-    displayText("Selected Sector: "+floor(selected.x+1)+", System: "+floor(selected.y+1), 10, 15);
+    displayText("Selected Sector: "+floor(selected.x+1)+", System: "+floor(selected.y+1), 30, 0);
     textAlign(RIGHT, BOTTOM);
     Sector sector = s[(int)index.x][(int)index.y];
     sector.renderSector();
@@ -82,8 +78,12 @@ class TacticalDisplay extends Readout {
       }
     }
 
+    fill(0);
+    noStroke();
+    drawRect(0, -10, originalSize.x, 20);
     textAlign(LEFT, TOP);
-    displayText("Selected Sector: "+floor(selected.x+1), 10, 15);
+    fill(255);
+    displayText("Selected Sector: "+floor(selected.x+1), 30, 0);
     textAlign(RIGHT, BOTTOM);
 
     int with = 0;
@@ -91,12 +91,14 @@ class TacticalDisplay extends Readout {
     for (int j = 0; j < amount-1; j++) {
       for (int i = 0; i < amount; i++) {
         PVector offset = new PVector(map(40, 0, 1000, 0, width), map(40, 0, 600, 0, height));
+        fill(255);
         textSize(map(10, 0, 1600, 0, width+height));
-        text(generateRandomNameS(index*1972394)+"-"+str(index+1), x + i*offset.x, y+j*offset.y, offset.x, offset.y);
+        text(/*generateRandomNameS(index*1972394)+"-"+*/str(index+1), x + i*offset.x, y+j*offset.y, offset.x, offset.y);
         if (within(this, targetingPointLoc, x+i*offset.x, y+j*offset.y, offset.x, offset.y)) {
           with = index;
           temp = new PVector(i, j);
         }
+        s[i][j].renderTiny(this, offset);
         index++;
       }
     }
@@ -105,6 +107,9 @@ class TacticalDisplay extends Readout {
       selectedSector = temp;
       selected.y = 0;
       selected.z = 0;
+      println("Conversion Function: "+convertIndexToVector(with));
+      println("index: "+with);
+      println("Actual: "+temp);
     }
   }
 
@@ -136,6 +141,23 @@ class TacticalDisplay extends Readout {
       break;
     case 2:
       systemMap();
+      fill(0);
+      drawRect(0, -100, originalSize.x, 110);
+      drawRect(0, originalSize.y-10, originalSize.y, 2000);
+      fill(255);
+      textAlign(LEFT, TOP);
+      textSize(13);
+      displayText("Selected Sector: "+floor(selected.x+1)+", System: "+floor(selected.y+1) + ", \nPlanet: " + floor(selected.z), 30, 0);
+      textAlign(RIGHT, BOTTOM);
+      break;
+    case 3:
+      s[(int)selectedSector.x][(int)selectedSector.y].getSystem((int)selected.y).getPlanet((int)selected.z).renderPlanetSystem(originalCoords, originalSize, originalCoords.y+originalSize.y/2);
+      
+      fill(255);
+      textAlign(LEFT, TOP);
+      textSize(13);
+      displayText("Sector: "+floor(selected.x+1)+", System: "+floor(selected.y+1) + ", Planet: " + floor(selected.z), 30, 0);
+      textAlign(RIGHT, BOTTOM);
       break;
     default:
       drawRect(0, 0, w, h);
@@ -145,9 +167,6 @@ class TacticalDisplay extends Readout {
     fill(0);
     drawRect(-2, -2, 12, 175);
     drawRect(218, 0, 10, 173);
-    fill(0);
-    drawRect(0, -100, originalSize.x, 110);
-    drawRect(0, originalSize.y-10, originalSize.y, 2000);
     displayImage(tacticalSurrounds, 0, 0, 228, 173);
     isClicked = false;
   }
@@ -155,7 +174,7 @@ class TacticalDisplay extends Readout {
   PVector[] randomSysCoords(int amount) {
     PVector[] r = new PVector[amount];
     for (int i = 0; i < amount; i++) {
-      r[i] = new PVector(random(10, w-10), random(30, h-40));
+      r[i] = new PVector(random(limits.x, limits.y), random(limits.z, limits.w));
     }
     return r;
   }

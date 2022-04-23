@@ -27,8 +27,8 @@ class Panel {
   Panel(float x, float y, float sizex, float sizey) {
     this(x, y, new PVector(sizex, sizey));
   }
-  
-  Panel(Readout r, float x, float y, float sizex, float sizey){
+
+  Panel(Readout r, float x, float y, float sizex, float sizey) {
     this(r.x+x, r.y+y, sizex, sizey);
   }
 
@@ -157,8 +157,8 @@ class RandomColorRect {
     randColor[2] = (int)random(200, 255);
     text = name;
   }
-  
-  RandomColorRect(){
+
+  RandomColorRect() {
     this(generateRandomName());
   }
 
@@ -201,7 +201,21 @@ class RandomColorRect {
     }
     return false;
   }
-  
+
+  boolean clicked(boolean passCondition) {
+    if (mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + h) {
+      isOver = true;
+      if (mousePressed && mousePressed != pMousePressed) {
+        if (passCondition) click.play();
+        else failClick.play();
+        fill(0, 50);
+        rect(x, y, w, h);
+        return passCondition;
+      }
+    }
+    return false;
+  }
+
   void clicked(Runnable run) {
     if (mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + h) {
       isOver = true;

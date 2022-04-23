@@ -17,18 +17,24 @@ class Subsystem extends Readout {
   }
 }
 
+
+
+
 class Weapons extends Subsystem {
   float powerRemaining = 0;
   float HP = 100;
   Weapons() {
     super(0, 0, 0, 0);
   }
-  
+
   void fire(float powerLevel, Ship target) {
-    if(target.shields.isEnabled) target.shields.hitShields(powerLevel);
+    if (target.shields.isEnabled) target.shields.hitShields(powerLevel);
     else target.hull.hitHull(powerLevel);
   }
 }
+
+
+
 
 class Phasers extends Weapons {
   Phasers() {
@@ -41,16 +47,21 @@ class Phasers extends Weapons {
   }
 }
 
+
+
+
 class Hull {
   float HP = 100;
-  Hull(){
-    
+  Hull() {
   }
-  
+
   void hitHull(float hitPower) {
     HP -= hitPower/3;
   }
 }
+
+
+
 
 class Shields extends Subsystem {
   float powerLevel = 100;
@@ -60,7 +71,7 @@ class Shields extends Subsystem {
   }
 
   boolean isShieldsUp() {
-    return powerLevel > 0;
+    return (powerLevel > 0 && isEnabled);
   }
 
   void hitShields(float hitPower) {
@@ -70,15 +81,23 @@ class Shields extends Subsystem {
   @Override
     void update() {
     super.update();
-    if(powerLevel < 0) isEnabled = false;
-    if(powerLevel < 100 && isEnabled) powerLevel++;
+    if (powerLevel < 0) isEnabled = false;
+    if (powerLevel < 100 && isEnabled) powerLevel+=0.125;
     else powerLevel = 100;
+    if (isEnabled && powerLevel > 90) batteries.power -= 0.02;
+    else if(isEnabled) batteries.power -= 0.05;
   }
 
   @Override
     void render() {
     if (isEnabled) {
       stroke(255, map(powerLevel, 0, 100, 0, 255));
+      fill(50, map(powerLevel, 0, 100, 0, 255));
+      strokeWeight(10);
+      ellipse(x+w/2, y+h/2, w-30, h-10);
+    }
+    if(powerLevel < 50) {
+      stroke(255, 0, 0, map(powerLevel, 0, 100, 0, 255));
       fill(50, map(powerLevel, 0, 100, 0, 255));
       strokeWeight(10);
       ellipse(x+w/2, y+h/2, w-30, h-10);
@@ -92,6 +111,9 @@ class Shields extends Subsystem {
     drawRect(140, 40, 30, 120, 10);
   }
 }
+
+
+
 
 class Batteries extends Subsystem {
   float power = 100;
@@ -125,6 +147,9 @@ class Batteries extends Subsystem {
   }
 }
 
+
+
+
 class Warpcore extends Subsystem {
   int segmantLight = 0;
   float travelDistance = 0;
@@ -142,17 +167,15 @@ class Warpcore extends Subsystem {
 
   void travel(TacticalDisplay tD, Sector current, Sector destination, StarSystem currentS, StarSystem destinationS, boolean startTravel, float speed) {
 
-    if (floor(current.distanceSector(destination.arrayID)) == 0) travelDistance = map(currentS.distanceSystem(destinationS.loc), 0, hypotenuse(228, 173), 0, 10)*10;
+    if (floor(current.distanceSector(destination.arrayID)) == 0) travelDistance = (map(currentS.distanceSystem(destinationS.loc), 0, hypotenuse(228, 173), 0, 10)*10)*2;
     else {
       //println("inRightSpot");
-      travelDistance = map(current.distanceSector(destination.arrayID), 0, hypotenuse(5, 4), 10, 50)*10+map(currentS.distanceSystem(destinationS.loc), 0, hypotenuse(228, 173), 0, 10)*10;
+      travelDistance = (map(current.distanceSector(destination.arrayID), 0, hypotenuse(5, 4), 10, 50)*10+map(currentS.distanceSystem(destinationS.loc), 0, hypotenuse(228, 173), 0, 10)*10)*2;
     }
-
-    //println(map(currentS.distanceSystem(destinationS.loc), 0, hypotenuse(228, 173), 0, 10)*10);
 
     if (traveledDistance < travelDistance && startTravel && isEnabled && !powerRerouted) {
       bat.power -= 0.5;
-      traveledDistance += speed/4;
+      traveledDistance += speed/6;
     }
     if (traveledDistance >= travelDistance && isTraveling) {
       traveledDistance = 0;
@@ -216,9 +239,12 @@ class Warpcore extends Subsystem {
   }
 }
 
+
+
+
 class Impulse extends Subsystem {
   PShape left, right;
-  boolean powerSave;
+  boolean powerSave = false;
   Batteries bat;
 
   Impulse (Batteries bat, float x, float y, float w, float h) {

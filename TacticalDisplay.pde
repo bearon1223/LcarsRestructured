@@ -19,7 +19,12 @@ class TacScreen extends Readout {
     topPanel.render();
     shields.render();
     topPanel.getSinglePanel(4, 0).rename("Toggle Shields");
-    topPanel.getSinglePanel(4, 0).clicked(() -> shields.isEnabled = !shields.isEnabled);
+    topPanel.getSinglePanel(4, 0).clicked(() -> {
+      shields.isEnabled = !shields.isEnabled;
+      if(shields.powerLevel > 45) shields.powerLevel = 35;
+      else shields.powerLevel = 0;
+    }
+    );
     circleButton(445, 435, 150, 150, null, null, null, null, null, null, null, null);
   }
 }
