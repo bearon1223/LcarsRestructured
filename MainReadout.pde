@@ -73,13 +73,19 @@ class MainReadout extends Readout {
       int increment = 5;
       circleButton(10, 10, 100, 100, null, null, null, null, () -> changePointPos(new PVector(0, -increment)), () -> changePointPos(new PVector(0, increment)), () -> changePointPos(new PVector(-increment, 0)), () -> changePointPos(new PVector(increment, 0)));
       circleButton(890 - originalCoords.x, 400 - originalCoords.y, 100, 100, null, null, null, null, null, null, null, null);
-
-      if (second() % 2 == 0 && (!wc.isEnabled || wc.powerRerouted)) fill(255, 100, 100);
-      else fill(255);
       textAlign(LEFT, CENTER);
-      if (!wc.isEnabled || wc.powerRerouted) displayText("Error: No Active Core", 10, 130, tD.originalSize.x, 20);
-      else if (wc.travelDistance-wc.traveledDistance != 0) displayText("Distance Left: "+str(round(wc.travelDistance-wc.traveledDistance)), 10, 130, tD.originalSize.x, 20);
-      else displayText("At Destination", 10, 130, tD.originalSize.x, 20);
+      if (wc.travelDistance-wc.traveledDistance != 0) {
+        if (second() % 2 == 0 && (!wc.isEnabled || wc.powerRerouted)) fill(255, 100, 100);
+        else fill(255);
+        if (!wc.isEnabled || wc.powerRerouted) displayText("Error: No Active Warp Core", 10, 130, tD.originalSize.x, 20);
+        else if (wc.travelDistance-wc.traveledDistance != 0) displayText("Distance Left: "+str(round(wc.travelDistance-wc.traveledDistance))+"LY", 10, 130, tD.originalSize.x, 20);
+      } else if (impulse.travelDistance-wc.traveledDistance != 0) {
+        if (second() % 2 == 0 && (!wc.isEnabled || wc.powerRerouted)) fill(255, 100, 100);
+        else fill(255);
+        if (!impulse.isEnabled || impulse.powerRerouted) displayText("Error: No Active Impulse Engines", 10, 130, tD.originalSize.x, 20);
+        else if (impulse.travelDistance-wc.traveledDistance != 0) displayText("Distance Left: "+str(round(impulse.travelDistance-impulse.traveledDistance))+"AU", 10, 130, tD.originalSize.x, 20);
+      } else displayText("At Destination", 10, 130, tD.originalSize.x, 20);
+
       textAlign(RIGHT, BOTTOM);
       if (navTopPanel.getSinglePanel(0, 0).clicked()) {
         tD.scene = 0;
@@ -94,28 +100,42 @@ class MainReadout extends Readout {
         tD.selectedSector = convertIndexToVector(coordinates.x);
         tD.scene = 3;
       }
+
+      if (impulse.traveledDistance-impulse.travelDistance != 0) {
+        if (navCenterPanel.getSinglePanel(0, 1).clicked(!impulse.powerRerouted && impulse.isEnabled)) {
+          isTravelingImpulse = true;
+          selectedSpeed = 0.33;
+        } else if (navCenterPanel.getSinglePanel(0, 2).clicked(!impulse.powerRerouted && impulse.isEnabled)) {
+          isTravelingImpulse = true;
+          selectedSpeed = 0.66;
+        } else if (navCenterPanel.getSinglePanel(0, 3).clicked(!impulse.powerRerouted && impulse.isEnabled)) {
+          isTravelingImpulse = true;
+          selectedSpeed = 1;
+        }
+      }
+
       if (navBottomPanel.getSinglePanel(0, 0).clicked(!wc.powerRerouted && wc.isEnabled)) {
-        isTraveling = true;
+        isTravelingWarp = true;
         selectedSpeed = 1;
       } else if (navBottomPanel.getSinglePanel(1, 0).clicked(!wc.powerRerouted && wc.isEnabled)) {
-        isTraveling = true;
+        isTravelingWarp = true;
         selectedSpeed = 2;
       } else if (navBottomPanel.getSinglePanel(2, 0).clicked(!wc.powerRerouted && wc.isEnabled)) {
-        isTraveling = true;
+        isTravelingWarp = true;
         selectedSpeed = 3;
       } else if (navBottomPanel.getSinglePanel(3, 0).clicked(!wc.powerRerouted && wc.isEnabled)) {
-        isTraveling = true;
+        isTravelingWarp = true;
         selectedSpeed = 4;
       } else if (navBottomPanel.getSinglePanel(4, 0).clicked(!wc.powerRerouted && wc.isEnabled)) {
-        isTraveling = true;
+        isTravelingWarp = true;
         selectedSpeed = 5;
       } else if (navBottomPanel.getSinglePanel(5, 0).clicked(!wc.powerRerouted && wc.isEnabled)) {
-        isTraveling = true;
+        isTravelingWarp = true;
         selectedSpeed = 6;
       } else if (navBottomPanel.getSinglePanel(6, 0).clicked(!wc.powerRerouted && wc.isEnabled)) {
-        isTraveling = true;
+        isTravelingWarp = true;
         selectedSpeed = 7;
-      } 
+      }
       break;
     case 2:
       // AUX Directory/Ship Status

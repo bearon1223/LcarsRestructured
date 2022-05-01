@@ -19,6 +19,7 @@ Warpcore wc;
 Impulse impulse;
 Batteries batteries;
 Shields shields;
+Hull hull;
 
 PImage icon;
 
@@ -34,7 +35,7 @@ PImage navTemplate;
 // SectorX, SectorY, SystemID, PlanetID
 PVector coordinates = new PVector(0, 0, 1);
 // Planet, X, Y
-PVector shipCoordinates = new PVector(0, 0, 0);
+PVector shipCoordinates = new PVector(1, 0, 0);
 
 PFont f;
 Sector[][] s;
@@ -45,12 +46,16 @@ SoundFile click;
 SoundFile failClick;
 
 boolean pMousePressed = false;
+boolean pKeyPressed = false;
 boolean isOver = false;
-boolean isTraveling = false;
+boolean isTravelingWarp = false;
+boolean isTravelingImpulse = false;
 
 float selectedSpeed = 0;
 
 int sceneMain = 0;
+
+Ship mainShip;
 
 void settings() {
   size (1000, 600);
@@ -91,6 +96,10 @@ void setup() {
   navTemplate       = loadImage("Nav Panel.jpg");
   icon              = loadImage("icon.png");
 
+  hull = new Hull();
+  
+  mainShip = new Ship(shipCoordinates, wc, shields, batteries, hull);
+
   surface.setTitle("LCARS");
   surface.setResizable(true);
   surface.setIcon(icon);
@@ -108,15 +117,21 @@ void draw() {
   batteries.update();
   shields.update();
 
+  //if (keyPressed && pKeyPressed != keyPressed) mainShip.testPrint();
+
   s[(int)convertIndexToVector(coordinates.x).x][(int)convertIndexToVector(coordinates.x).y].getSystem((int)coordinates.y).getPlanet((int)coordinates.z).update();
 
-  //travel(TacticalDisplay tD, Sector current, Sector destination, StarSystem currentS, StarSystem destinationS, boolean startTravel, float speed) One beefy function jesus christ
   wc.travel(mReadout.tD,
     s[(int)mReadout.tD.currentSector.x][(int)mReadout.tD.currentSector.y],
     s[(int)mReadout.tD.selectedSector.x][(int)mReadout.tD.selectedSector.y],
     s[(int)mReadout.tD.currentSector.x][(int)mReadout.tD.currentSector.y].getSystem((int)coordinates.y),
     s[(int)mReadout.tD.selectedSector.x][(int)mReadout.tD.selectedSector.y].getSystem((int)mReadout.tD.selected.y),
-    isTraveling, selectedSpeed);
+    isTravelingWarp, selectedSpeed);
+
+  impulse.travel(mReadout.tD,
+    s[(int)convertIndexToVector(coordinates.x).x][(int)convertIndexToVector(coordinates.x).y].getSystem((int)coordinates.y).getPlanet((int)coordinates.z),
+    s[(int)convertIndexToVector(coordinates.x).x][(int)convertIndexToVector(coordinates.x).y].getSystem((int)coordinates.y).getPlanet((int)mReadout.tD.selected.z),
+    isTravelingImpulse, selectedSpeed);
 
   switch(sceneMain) {
   case 0:
@@ -177,6 +192,7 @@ void draw() {
   if (isOver) cursor(HAND);
   else cursor(ARROW);
   pMousePressed = mousePressed;
+  pKeyPressed = keyPressed;
 }
 
 void smallSettingsPanelButtons() {

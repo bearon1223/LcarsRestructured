@@ -84,7 +84,7 @@ class Planet {
   Planet(int id, float size) {
     this.id = id;
     this.size = size;
-    shipTest = new Ship(new PVector(1, 1, 1));
+    shipTest = new Ship(id, new PVector(1, 1, 1));
   }
 
   Planet(int id) {
@@ -111,14 +111,16 @@ class Planet {
     mapEllipse(tDloc.x+tDsize.x/2, yCoord, size*2, size*2);
     
     fill(255);
-    if (shipTest.loc.x == 1) mapEllipse(map(shipTest.loc.y, 0, 100, tDloc.x, tDloc.x+tDsize.x), map(shipTest.loc.z, 0, 100, tDloc.y, tDloc.y+tDsize.y), 5, 5);
+    mapEllipse(map(shipTest.loc.y, 0, 100, tDloc.x, tDloc.x+tDsize.x), map(shipTest.loc.z, 0, 100, tDloc.y, tDloc.y+tDsize.y), 5, 5);
+    //mapEllipse(map(shipTest.targetCoords.y, 0, 100, tDloc.x, tDloc.x+tDsize.x), map(shipTest.targetCoords.z, 0, 100, tDloc.y, tDloc.y+tDsize.y), 5, 5);
 
-    //if (shipCoordinates.x == 1) mapEllipse(map(shipCoordinates.y, 0, 100, 390, 510), map(shipCoordinates.z, 0, 100, yCoord-60, yCoord+60), 5, 5);
+    fill(50, 50, 255);
+    if (shipCoordinates.x == id) mapEllipse(map(shipCoordinates.y, 0, 100, tDloc.x, tDloc.x+tDsize.x), map(shipCoordinates.z, 0, 100, tDloc.y, tDloc.y+tDsize.y), 5, 5);
   }
 
   void update() {
     shipTest.update();
-    if (shipTest.isAtCoords(shipTest.targetCoords)) shipTest.targetCoords = shipTest.pickPoint(1, false);
+    if (shipTest.isAtCoords(shipTest.targetCoords)) shipTest.targetCoords = shipTest.pickPoint(id, false);
     shipTest.goToCoords(shipTest.targetCoords);
   }
 }

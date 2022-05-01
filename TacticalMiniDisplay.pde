@@ -38,16 +38,14 @@ class TacticalDisplay extends Readout {
     float yCoord = originalCoords.y+originalSize.y/2;
     s[(int)selectedSector.x][(int)selectedSector.y].getSystem(floor(selected.y)).renderPlanets(yCoord);
 
-    if (isClicked && within(this, targetingPointLoc, 410, yCoord, s[(int)selectedSector.x][(int)selectedSector.y].getSystem(floor(selected.y)).r)) {
+    if (isClicked && within(this, targetingPointLoc, 450, yCoord, s[(int)selectedSector.x][(int)selectedSector.y].getSystem(floor(selected.y)).getPlanet((int)selected.z).size*2)) {
       selected.z = 0;
-    } else  if (isClicked && within(this, targetingPointLoc, 450, yCoord, s[(int)selectedSector.x][(int)selectedSector.y].getSystem(floor(selected.y)).getPlanet((int)selected.z).size)) {
+    } else if (isClicked && within(this, targetingPointLoc, 490, yCoord, s[(int)selectedSector.x][(int)selectedSector.y].getSystem(floor(selected.y)).getPlanet((int)selected.z).size*2)) {
       selected.z = 1;
-    } else if (isClicked && within(this, targetingPointLoc, 490, yCoord, s[(int)selectedSector.x][(int)selectedSector.y].getSystem(floor(selected.y)).getPlanet((int)selected.z).size)) {
+    } else if (isClicked && within(this, targetingPointLoc, 540, yCoord, s[(int)selectedSector.x][(int)selectedSector.y].getSystem(floor(selected.y)).getPlanet((int)selected.z).size*2)) {
       selected.z = 2;
-    } else if (isClicked && within(this, targetingPointLoc, 540, yCoord, s[(int)selectedSector.x][(int)selectedSector.y].getSystem(floor(selected.y)).getPlanet((int)selected.z).size)) {
+    } else if (isClicked && within(this, targetingPointLoc, 590, yCoord, s[(int)selectedSector.x][(int)selectedSector.y].getSystem(floor(selected.y)).getPlanet((int)selected.z).size*2)) {
       selected.z = 3;
-    } else if (isClicked && within(this, targetingPointLoc, 590, yCoord, s[(int)selectedSector.x][(int)selectedSector.y].getSystem(floor(selected.y)).getPlanet((int)selected.z).size)) {
-      selected.z = 4;
     }
   }
 
@@ -147,22 +145,22 @@ class TacticalDisplay extends Readout {
       fill(255);
       textAlign(LEFT, TOP);
       textSize(13);
-      displayText("Selected Sector: "+floor(selected.x+1)+", System: "+floor(selected.y+1) + ", \nPlanet: " + floor(selected.z), 30, 0);
+      displayText("Selected Sector: "+floor(selected.x+1)+", System: "+floor(selected.y+1) + ", \nPlanet: " + floor(selected.z+1), 30, 0);
       textAlign(RIGHT, BOTTOM);
       break;
     case 3:
       s[(int)selectedSector.x][(int)selectedSector.y].getSystem((int)selected.y).getPlanet((int)selected.z).renderPlanetSystem(originalCoords, originalSize, originalCoords.y+originalSize.y/2);
-      
+
       fill(255);
       textAlign(LEFT, TOP);
       textSize(13);
-      displayText("Sector: "+floor(selected.x+1)+", System: "+floor(selected.y+1) + ", Planet: " + floor(selected.z), 30, 0);
+      displayText("Sector: "+floor(selected.x+1)+", System: "+floor(selected.y+1) + ", Planet: " + floor(selected.z+1), 30, 0);
       textAlign(RIGHT, BOTTOM);
       break;
     default:
       drawRect(0, 0, w, h);
     }
-    target(targetingPointLoc.x, targetingPointLoc.y, 5);
+    if (scene != 3) target(targetingPointLoc.x, targetingPointLoc.y, 5);
     noStroke();
     fill(0);
     drawRect(-2, -2, 12, 175);

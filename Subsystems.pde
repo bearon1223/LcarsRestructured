@@ -85,7 +85,8 @@ class Shields extends Subsystem {
     if (powerLevel < 100 && isEnabled) powerLevel+=0.125;
     else powerLevel = 100;
     if (isEnabled && powerLevel > 90) batteries.power -= 0.02;
-    else if(isEnabled) batteries.power -= 0.05;
+    else if (isEnabled) batteries.power -= 0.08;
+    if(!isEnabled) powerLevel = 0;
   }
 
   @Override
@@ -96,7 +97,7 @@ class Shields extends Subsystem {
       strokeWeight(10);
       ellipse(x+w/2, y+h/2, w-30, h-10);
     }
-    if(powerLevel < 50) {
+    if (powerLevel < 50) {
       stroke(255, 0, 0, map(powerLevel, 0, 100, 0, 255));
       fill(50, map(powerLevel, 0, 100, 0, 255));
       strokeWeight(10);
@@ -168,20 +169,18 @@ class Warpcore extends Subsystem {
   void travel(TacticalDisplay tD, Sector current, Sector destination, StarSystem currentS, StarSystem destinationS, boolean startTravel, float speed) {
 
     if (floor(current.distanceSector(destination.arrayID)) == 0) travelDistance = (map(currentS.distanceSystem(destinationS.loc), 0, hypotenuse(228, 173), 0, 10)*10)*2;
-    else {
-      //println("inRightSpot");
-      travelDistance = (map(current.distanceSector(destination.arrayID), 0, hypotenuse(5, 4), 10, 50)*10+map(currentS.distanceSystem(destinationS.loc), 0, hypotenuse(228, 173), 0, 10)*10)*2;
-    }
+    else  travelDistance = (map(current.distanceSector(destination.arrayID), 0, hypotenuse(5, 4), 10, 50)*10+map(currentS.distanceSystem(destinationS.loc), 0, hypotenuse(228, 173), 0, 10)*10)*2;
 
     if (traveledDistance < travelDistance && startTravel && isEnabled && !powerRerouted) {
-      bat.power -= 0.5;
+      bat.power -= map(speed, 0, 7, 0.5, 1);
       traveledDistance += speed/6;
     }
-    if (traveledDistance >= travelDistance && isTraveling) {
+    if (traveledDistance >= travelDistance && isTravelingWarp) {
       traveledDistance = 0;
-      coordinates = new PVector(destination.id, destinationS.id, 0);
+      coordinates = new PVector(destination.id, destinationS.id, 1);
+      shipCoordinates.x = 1;
       tD.currentSector = destination.arrayID;
-      isTraveling = false;
+      isTravelingWarp = false;
     }
   }
 
@@ -245,6 +244,7 @@ class Warpcore extends Subsystem {
 class Impulse extends Subsystem {
   PShape left, right;
   boolean powerSave = false;
+  float travelDistance = 0, traveledDistance = 0;
   Batteries bat;
 
   Impulse (Batteries bat, float x, float y, float w, float h) {
@@ -256,76 +256,27 @@ class Impulse extends Subsystem {
     this(bat, x, y, 150, 50);
   }
 
+  void travel(TacticalDisplay tD, Planet current, Planet destination, boolean startTravel, float speed) {
+    travelDistance = map(abs(current.id-destination.id), 0, 3, 0, 10);
+    if (traveledDistance < travelDistance && startTravel && isEnabled && !powerRerouted){
+      bat.power-=0.1;
+      traveledDistance += speed/12;
+    }
+    if(traveledDistance >= travelDistance && isTravelingImpulse) {
+      traveledDistance = 0;
+      coordinates.z = destination.id;
+      shipCoordinates.x = destination.id;
+      isTravelingImpulse = false;
+      tD.selected.z = destination.id;
+    }
+  }
+
   @Override
     void update() {
     super.update();
-
-    x+=5;
-    y+=5;
-    h-=10;
-    w-=10;
-    if (isEnabled && !powerRerouted && !powerSave) {
-      bat.power-=0.03;
-      left = createShape();
-      left.beginShape();
-      left.fill(255, 0, 0);
-      left.vertex(x, y);
-      left.vertex(x, y+h);
-      left.vertex(x+w/2-w/8, y+h/1.5);
-      left.vertex(x+w/2-w/8, y);
-      left.endShape();
-
-      right = createShape();
-      right.beginShape();
-      right.fill(255, 0, 0);
-      right.vertex(x+w-w/2+w/8, y);
-      right.vertex(x+w, y);
-      right.vertex(x+w, y+h);
-      right.vertex(x+w-w/2+w/8, y+h/1.5);
-      right.endShape();
-    } else if (powerSave && isEnabled) {
-      bat.power-=0.01;
-      left = createShape();
-      left.beginShape();
-      left.fill(175, 0, 0);
-      left.vertex(x, y);
-      left.vertex(x, y+h);
-      left.vertex(x+w/2-w/8, y+h/1.5);
-      left.vertex(x+w/2-w/8, y);
-      left.endShape();
-
-      right = createShape();
-      right.beginShape();
-      right.fill(175, 0, 0);
-      right.vertex(x+w-w/2+w/8, y);
-      right.vertex(x+w, y);
-      right.vertex(x+w, y+h);
-      right.vertex(x+w-w/2+w/8, y+h/1.5);
-      right.endShape();
-    } else {
-      left = createShape();
-      left.beginShape();
-      left.fill(100, 0, 0);
-      left.vertex(x, y);
-      left.vertex(x, y+h);
-      left.vertex(x+w/2-w/8, y+h/1.5);
-      left.vertex(x+w/2-w/8, y);
-      left.endShape();
-
-      right = createShape();
-      right.beginShape();
-      right.fill(100, 0, 0);
-      right.vertex(x+w-w/2+w/8, y);
-      right.vertex(x+w, y);
-      right.vertex(x+w, y+h);
-      right.vertex(x+w-w/2+w/8, y+h/1.5);
-      right.endShape();
-    }
-    if (isEnabled && powerRerouted) bat.power+=0.01;
-    x-=5;
-    y-=5;
-    h+=10;
-    w+=10;
+    if (isEnabled && !powerRerouted && !powerSave) bat.power-=0.03;
+    else if (powerSave && isEnabled) bat.power-=0.01;
+    if (isEnabled && powerRerouted) bat.power+=0.05;
   }
 
   @Override
@@ -333,8 +284,10 @@ class Impulse extends Subsystem {
     noStroke();
     fill(200);
     drawRect(0, 0, originalSize.x, originalSize.y, 10);
-    shape(left);
-    shape(right);
+    if (isEnabled && !powerRerouted && !powerSave) fill(255, 0, 0);
+    else if (powerSave && isEnabled) fill(175, 0, 0);
+    else fill(100, 0, 0);
+    impulseShape(x+5, y+5, w-10, h-10);
     if (isEnabled) {
       fill(0);
       textAlign(CENTER, BOTTOM);

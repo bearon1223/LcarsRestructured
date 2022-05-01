@@ -32,12 +32,10 @@ float ezMap(float x, boolean isWidth) {
 }
 
 boolean within(PVector vector, float x, float y, float w, float h) {
-  if (vector.x > x && vector.y > y && vector.x < x + w && vector.y < y+h) return true;
-  return false;
+  return (vector.x > x && vector.y > y && vector.x < x + w && vector.y < y+h);
 }
 
 boolean within(Readout r, PVector vector, float x, float y, float w, float h) {
-
   if (ezMap(vector.x+r.originalCoords.x, true) > x && ezMap(vector.y+r.originalCoords.y, false) > y && ezMap(vector.x+r.originalCoords.x, true) < x + w && ezMap(vector.y+r.originalCoords.y, false) < y+h) return true;
   return false;
 }
@@ -47,8 +45,7 @@ float hypotenuse(float x, float y) {
 }
 
 boolean within(Readout r, PVector vector, float x, float y, float d) {
-  if (abs(hypotenuse(ezMap(vector.x+r.originalCoords.x, true)-ezMap(x, true), ezMap(vector.y+r.originalCoords.y, false)-ezMap(y, false))) <= d/2) return true;
-  return false;
+  return (abs(hypotenuse(ezMap(vector.x+r.originalCoords.x, true)-ezMap(x, true), ezMap(vector.y+r.originalCoords.y, false)-ezMap(y, false))) <= d/2);
 }
 
 boolean within(PVector vector, float x, float y, float d) {
@@ -70,6 +67,27 @@ PVector convertIndexToVector(float index) {
   else if (index <= 19) finalConversion = new PVector(index-15, 3);
   else println("ur dum");
   return finalConversion;
+}
+
+void impulseShape(float x, float y, float w, float h) {
+  PShape left, right;
+  left = createShape();
+  left.beginShape();
+  left.vertex(x, y);
+  left.vertex(x, y+h);
+  left.vertex(x+w/2-w/8, y+h/1.5);
+  left.vertex(x+w/2-w/8, y);
+  left.endShape();
+
+  right = createShape();
+  right.beginShape();
+  right.vertex(x+w-w/2+w/8, y);
+  right.vertex(x+w, y);
+  right.vertex(x+w, y+h);
+  right.vertex(x+w-w/2+w/8, y+h/1.5);
+  right.endShape();
+  shape(left);
+  shape(right);
 }
 
 class longVector {
